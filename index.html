@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fix Your 3D Printer in 5 Minutes — Free Cheat Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #141720;
+    --border:    #1e2230;
+    --accent:    #ff6b35;
+    --accent2:   #00d4aa;
+    --text:      #e8eaf0;
+    --muted:     #6b7280;
+    --mono:      'Space Mono', monospace;
+    --sans:      'Space Grotesk', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(8px);
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--accent2);
+    letter-spacing: 0.05em;
+  }
+  .logo span { color: var(--accent); }
+  nav a {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+  h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 4px; left: 0; right: 0; height: 3px;
+    background: var(--accent);
+    opacity: 0.3;
+  }
+
+  .subhead {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  /* ── MOCK GUIDE COVER ── */
+  .guide-visual {
+    width: 260px;
+    margin: 0 auto 3rem;
+    position: relative;
+  }
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,107,53,0.1);
+    transform: rotate(-2deg);
+    transition: transform 0.3s ease;
+  }
+  .guide-card:hover { transform: rotate(0deg) scale(1.02); }
+  .guide-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .guide-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .guide-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+  .guide-lines { display: flex; flex-direction: column; gap: 6px; }
+  .guide-line {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+  }
+  .guide-line:nth-child(1) { width: 90%; }
+  .guide-line:nth-child(2) { width: 75%; }
+  .guide-line:nth-child(3) { width: 85%; }
+  .guide-line:nth-child(4) { width: 60%; }
+  .guide-badge {
+    position: absolute;
+    bottom: -10px; right: -10px;
+    background: var(--accent2);
+    color: #0d0f14;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    transform: rotate(3deg);
+  }
+
+  /* ── FORM ── */
+  .form-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 480px;
+    margin: 0 auto 1.5rem;
+  }
+  .form-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    display: block;
+    text-align: left;
+  }
+  .input-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  input[type="email"] {
+    flex: 1;
+    min-width: 200px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="email"]:focus { border-color: var(--accent); }
+  input[type="email"]::placeholder { color: var(--muted); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.4rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: #ff8555; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .privacy-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.75rem;
+  }
+  .privacy-note a { color: var(--muted); text-decoration: underline; }
+
+  /* ── WHAT'S INSIDE ── */
+  .section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+  }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .problem-card:hover {
+    border-color: rgba(255,107,53,0.4);
+    transform: translateY(-2px);
+  }
+  .problem-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+  .problem-card h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .problem-card p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── SOCIAL PROOF ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+  .testimonials {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .testi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+  .testi-text {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .testi-author {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent2);
+  }
+  .stars { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.5rem; }
+
+  /* ── CTA FOOTER ── */
+  .cta-footer {
+    text-align: center;
+    padding: 5rem 2rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .cta-footer h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .cta-footer p {
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero > * {
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero > *:nth-child(1) { animation-delay: 0.05s; }
+  .hero > *:nth-child(2) { animation-delay: 0.15s; }
+  .hero > *:nth-child(3) { animation-delay: 0.25s; }
+  .hero > *:nth-child(4) { animation-delay: 0.35s; }
+  .hero > *:nth-child(5) { animation-delay: 0.45s; }
+
+  @media (max-width: 480px) {
+    .input-row { flex-direction: column; }
+    .btn-primary { width: 100%; }
+  }
+
+  /* Success state */
+  .success-msg {
+    display: none;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    color: var(--accent2);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .success-msg.show { display: block; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">print<span>fix</span>.guide</div>
+  <a href="#get-it">Get the free guide →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">Free Download — No Credit Card</div>
+
+  <h1>Stop Wasting Filament on <em>Fixable</em> Failures</h1>
+
+  <p class="subhead">
+    The 3D printing cheat sheet that covers 42 common failures — with exact settings fixes. Layer adhesion, stringing, warping, clogs, and more. One page. Instant download.
+  </p>
+
+  <div class="guide-visual">
+    <div class="guide-card">
+      <div class="guide-tag">// cheat_sheet_v3.pdf</div>
+      <div class="guide-title">3D Print Failure<br>Diagnosis Guide</div>
+      <div class="guide-lines">
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+      </div>
+      <div class="guide-badge">FREE PDF</div>
+    </div>
+  </div>
+
+  <div class="form-wrap" id="get-it">
+    <label class="form-label">// drop your email — get it instantly</label>
+    <div class="input-row">
+      <input type="email" id="emailInput" placeholder="you@example.com" />
+      <button class="btn-primary" onclick="handleSubmit()">Send Me the Guide</button>
+    </div>
+    <p class="privacy-note">No spam, ever. Unsubscribe any time. &nbsp;·&nbsp; <a href="#">Privacy</a></p>
+    <div class="success-msg" id="successMsg">
+      ✓ &nbsp;Check your inbox! Your guide is on its way. (Replace this with your email provider's confirmation.)
+    </div>
+  </div>
+
+  <p style="font-size:0.8rem;color:var(--muted);">Trusted by 3D printing hobbyists and makers worldwide</p>
+</section>
+
+<hr class="divider">
+
+<!-- WHAT'S INSIDE -->
+<section class="section">
+  <div class="section-label">// what_you_get</div>
+  <h2>Every failure. Explained. Fixed.</h2>
+
+  <div class="problems-grid">
+    <div class="problem-card">
+      <span class="problem-icon">🍜</span>
+      <h3>Stringing & Oozing</h3>
+      <p>Retraction distance, travel speed, and temperature fixes that actually work.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🧱</span>
+      <h3>Layer Delamination</h3>
+      <p>Why your prints split mid-way and how to fix temp, speed, and cooling.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🌊</span>
+      <h3>Warping & Lifting</h3>
+      <p>Bed temp, adhesion, enclosure, and first-layer calibration checklist.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🔥</span>
+      <h3>Heat Creep</h3>
+      <p>Diagnosing blockages in the cold zone and which hotends actually fix it.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">⚙️</span>
+      <h3>Extruder Skipping</h3>
+      <p>Gear tension, idler arm, and current settings — the full diagnostic tree.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">📐</span>
+      <h3>Dimensional Accuracy</h3>
+      <p>Flow rate, e-steps, pressure advance — get parts that actually fit.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">💧</span>
+      <h3>Wet Filament</h3>
+      <p>Drying times and temps for every material: PLA, PETG, PA, TPU, PC.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🐘</span>
+      <h3>Elephant's Foot</h3>
+      <p>First layer squish, Z-offset, and live adjust techniques for a perfect base.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SOCIAL PROOF -->
+<section class="section">
+  <div class="section-label">// community_feedback</div>
+  <h2>From people who've been there</h2>
+
+  <div class="testimonials">
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"Saved me three spools of PETG figuring out heat creep. This should be pinned in every 3D printing community."</p>
+      <div class="testi-author">— /u/mk3s_enjoyer · r/3Dprinting</div>
+    </div>
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"Finally a guide written by someone who actually prints. The pressure advance section alone was worth it."</p>
+      <div class="testi-author">— Dave T. · Klipper Discord</div>
+    </div>
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"I've been printing for 4 years and still learned something new. The wet filament drying chart is now taped to my wall."</p>
+      <div class="testi-author">— Maria S. · Facebook Maker Group</div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<div class="cta-footer">
+  <h2>It's free. No catch.</h2>
+  <p>Get the PDF now — fix your next print before it fails.</p>
+  <div class="form-wrap" style="background:transparent;border:none;padding:0;max-width:420px;">
+    <div class="input-row" style="justify-content:center;">
+      <input type="email" id="emailInput2" placeholder="you@example.com" />
+      <button class="btn-primary" onclick="handleSubmit2()">Get the Free Guide</button>
+    </div>
+    <p class="privacy-note">No spam. Ever.</p>
+    <div class="success-msg" id="successMsg2">
+      ✓ &nbsp;Check your inbox! Your guide is on its way.
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2026 PrintFix.Guide &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; Built by a maker, for makers
+</footer>
+
+<script>
+  // Replace these with your actual email provider embed / form action
+  // e.g. Mailchimp, Beehiiv, ConvertKit, etc.
+
+  function handleSubmit() {
+    const email = document.getElementById('emailInput').value;
+    if (!validateEmail(email)) {
+      document.getElementById('emailInput').style.borderColor = '#ff4444';
+      return;
+    }
+    // TODO: POST to your email provider API or form action here
+    // e.g. fetch('https://app.mailchimp.com/...', { method: 'POST', body: ... })
+    console.log('Subscriber:', email);
+    document.getElementById('successMsg').classList.add('show');
+    document.getElementById('emailInput').style.display = 'none';
+    document.querySelector('.input-row .btn-primary').style.display = 'none';
+  }
+
+  function handleSubmit2() {
+    const email = document.getElementById('emailInput2').value;
+    if (!validateEmail(email)) {
+      document.getElementById('emailInput2').style.borderColor = '#ff4444';
+      return;
+    }
+    console.log('Subscriber:', email);
+    document.getElementById('successMsg2').classList.add('show');
+    document.getElementById('emailInput2').style.display = 'none';
+  }
+
+  function validateEmail(e) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  }
+</script>
+
+</body>
+</html>
